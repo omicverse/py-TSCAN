@@ -1,0 +1,52 @@
+# Pre-registered parity gate for py-TSCAN
+# READ-ONLY after Acceleration Agent starts.
+
+package: py-TSCAN
+upstream:
+  name: TSCAN
+  version: "2.0.0"
+  source: Bioconductor
+  url: https://github.com/zji90/TSCAN
+
+algorithm_class: ordinal
+parity_threshold: 0.99
+
+fixture:
+  path: data/fixture_lpsdata.rds
+  source: TSCAN::lpsdata (ships with the upstream R package)
+  description: "BMDC scRNA-seq, GSE48968 subset — 131 cells × 16776 genes; the canonical TSCAN vignette dataset"
+  expected_shape: [16776, 131]
+
+reference_command: tests/r_reference_driver.R
+
+seed: 12345    # MATCHES R's internal set.seed(12345) in exprmclust/TSCANorder
+
+outputs:
+  - name: pseudotime
+    type: "1d vector (per cell)"
+    location_reference: "$.Pseudotime"
+    location_candidate: "Pseudotime"
+    metric: ordinal
+    threshold: 0.99
+  - name: cluster_id
+    type: "integer label vector (per cell)"
+    location_reference: "$.clusterid"
+    location_candidate: "clusterid"
+    metric: clustering
+    threshold: 0.95
+  - name: pcadim
+    type: "scalar int (auto-selected PC dim)"
+    location_reference: "$.pcadim"
+    location_candidate: "pcadim"
+    metric: deterministic
+    threshold: 0   # exact integer match
+
+acceleration:
+  enabled: true
+  max_iterations: 10
+  must_pass_gate: true
+
+audit_class: null  # filled at release
+
+created_by: claude-opus-4-7 via omicverse-rebuild kit
+created_at: 2026-05-24

@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+.vscode/
+.idea/
+
+# Upstream R clone
+TSCAN-ref/
+
+# Generated outputs (regenerable from prepare_fixture.R)
+data/fixture_lpsdata.rds
+data/fixture_lpsdata.csv
+data/reference_output.json
+data/candidate_output.json
